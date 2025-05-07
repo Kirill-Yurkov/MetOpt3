@@ -31,24 +31,42 @@ def armijo(f, grad, x, p, alpha=10, beta=0.9, sigma=0.0001, max_iter=100):
 def newton_method(f, grad, hess, x0, max_iter=500):
     x = np.array(x0, dtype=float)
     path = [x.copy()]
+    
+    # Вычисляем Гессиан только один раз
     H_fixed = hess(x)
-    H_inv_fixed = np.linalg.inv(H_fixed)
+    
+    # Регуляризуем матрицу Гессе (добавляем малое значение на диагональ)
+    epsilon = 1e-6
+    H_fixed_reg = H_fixed + epsilon * np.eye(H_fixed.shape[0])
+    
+    try:
+        H_inv_fixed = np.linalg.inv(H_fixed_reg)
+    except np.linalg.LinAlgError:
+        print("Матрица Гессе вырождена даже после регуляризации")
+        return x, path
+
     for k in range(max_iter):
         g = grad(x)
-        p = -H_inv_fixed @ g  
+        p = -H_inv_fixed @ g  # Направление спуска
         alpha = armijo(f, grad, x, p)
+
         x_new = x + alpha * p
         path.append(x_new.copy())
+
+        # Критерий остановки по изменению точки
         if np.linalg.norm(x_new - x) < 0.001:
             print(f"Сошлось за {k} итераций")
             break
+
         x = x_new
+
     else:
         print("Достигнуто максимальное число итераций")
+
     return x, path
 
 
-x0 = [2, 2]
+x0 = [0, 0]
 x_min, path = newton_method(himmelblau, grad_himmelblau, hess_himmelblau, x0)
 
 print("Найденный минимум:", x_min)
