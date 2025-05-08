@@ -51,7 +51,6 @@ def newton_method(f, grad, hess, x0, max_iter=500):
 
         # Критерий остановки по изменению точки
         if np.linalg.norm(x_new - x) < 0.001:
-            print(f"Сошлось за {k} итераций")
             break
 
         x = x_new
@@ -59,7 +58,7 @@ def newton_method(f, grad, hess, x0, max_iter=500):
     else:
         print("Достигнуто максимальное число итераций")
 
-    return x, path
+    return x, path, k
 
 
 x0 = [0, 0]

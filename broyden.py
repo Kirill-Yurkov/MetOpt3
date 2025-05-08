@@ -113,12 +113,7 @@ def plot_trajectory(path):
     X, Y = np.meshgrid(x_range, y_range)
     Z = himmelblau([X, Y])
 
-    known_minima = [
-        [3.0, 2.0],
-        [-2.805118, 3.131312],
-        [-3.779310, -3.283186],
-        [3.584428, -1.848126]
-    ]
+    
 
     plt.figure(figsize=(10, 8))
     contour = plt.contour(X, Y, Z, levels=np.logspace(0, 3, 30), cmap='viridis', alpha=0.7)
@@ -126,7 +121,12 @@ def plot_trajectory(path):
     plt.plot(x_coords, y_coords, 'o-', color='blue', label='Траектория метода')
     plt.plot(x_coords[0], y_coords[0], 'ro', markersize=8, label='Начальная точка')
     plt.plot(x_coords[-1], y_coords[-1], 'go', markersize=8, label='Найденный минимум')
-
+    known_minima = [
+            [3.0, 2.0],
+            [-2.805118, 3.131312],
+            [-3.779310, -3.283186],
+            [3.584428, -1.848126]
+        ]
     for xm, ym in known_minima:
         plt.plot(xm, ym, 'mx', markersize=10, label='Известный минимум')
 
