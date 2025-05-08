@@ -1,5 +1,4 @@
 import numpy as np
-from numdifftools import Gradient
 import matplotlib.pyplot as plt
 
 # === Функция Химмельблау ===
@@ -44,7 +43,7 @@ def opt_step(f, x, p, x1=0, x2=0.5, eps=1e-8):
 
 # === Метод Бройдена ===
 # === Метод Бройдена ===
-def broyden_method(f, grad_f, x0, max_iter=1000, tol=1e-6, gamma_min=1e-8, gamma_max=1):
+def broyden_method(f, grad_f, x0, func_iter, max_iter=1000, tol=1e-6, gamma_min=1e-8, gamma_max=1):
     x = np.array(x0, dtype=float)
     path = [x.copy()]
     d = len(x)
@@ -56,7 +55,7 @@ def broyden_method(f, grad_f, x0, max_iter=1000, tol=1e-6, gamma_min=1e-8, gamma
 
     for _ in range(max_iter):
         # Выбор шага методом золотого сечения
-        gamma = opt_step(f, x, p)
+        gamma = func_iter(f, x, p)
 
         # Ограничение шага
         gamma = max(gamma_min, min(gamma, gamma_max))
@@ -97,7 +96,7 @@ def broyden_method(f, grad_f, x0, max_iter=1000, tol=1e-6, gamma_min=1e-8, gamma
 
 # === Точка старта и запуск ===
 x0 = [0, 0]  # Можно изменить начальную точку
-result, path, iterations = broyden_method(himmelblau, grad_himmelblau, x0)
+result, path, iterations = broyden_method(himmelblau, grad_himmelblau, x0, opt_step)
 
 print("Найденный минимум:", result)
 print("Значение функции в минимуме:", himmelblau(result))
